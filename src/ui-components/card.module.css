@@ -8,7 +8,7 @@
   box-sizing: border-box;
   border-radius: 3px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .container:hover {
@@ -16,7 +16,7 @@
 }
 
 .selected {
-  background: #1b5e20;
+  background: #35cfda;
   color: white;
 }
 
