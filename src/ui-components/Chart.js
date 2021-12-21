@@ -61,8 +61,8 @@ const Chart = (props) => {
       <Toolbar list={zoomMenu} type="default" location={['horisontal', 'right', 'top']} />
 
       <svg viewBox={`${props.x} ${props.y} ${WIDTH} ${HEIGHT}`}
-        onMouseDown={(e) => props.onMouseDown(e)}
         onMouseMove={(e) => props.onMouseMove(e)}
+        onMouseDown={(e) => props.onMouseDown(e)}
         onMouseUp={(e) => props.onMouseUp(e)}
       >
         <Connection list={elements} />

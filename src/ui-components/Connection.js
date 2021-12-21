@@ -10,8 +10,9 @@ const Connection = (props) => {
     const dx = element.x - element.px;
     const dy = element.y - element.py;
     const d = `M ${element.px} ${element.py} c ${DX} 0, ${dx-DX} ${dy}, ${dx} ${dy}`;
+    console.log(d);
     return (
-      <path d={d} className={css.connection} />
+      <path d={d} className={css.connection} key={element.id} />
     )
   }
   return (
