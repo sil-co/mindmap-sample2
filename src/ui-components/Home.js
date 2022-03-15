@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import repository from '../repository';
 import Toolbar from './Toolbar';
 import css from './home.module.css';
@@ -26,10 +26,10 @@ const Home = () => {
     { name: 'delete', onClick: () => deleteData(id), },
   ];
 
-  const setSelected = (id) => {
+  const setSelected = useCallback((id) => {
     console.log('[Home] setSelected');
     setId(id);
-  };
+  }, [])
 
   const deleteData = (id) => {
     console.log('[Home] deleteData');
@@ -37,10 +37,10 @@ const Home = () => {
     setList(repository.getList({level: 0}));
   };
 
-  const getMap = (id) => {
+  const getMap = useCallback((id) => {
     console.log('[Home] getMap');
     router.setRoute('map', id);
-  };
+  }, [])
 
     return (
       <>

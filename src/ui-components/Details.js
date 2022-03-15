@@ -1,5 +1,6 @@
 import React from 'react';
-import css from './details.module.css';
+// import css from './details.module.css';
+import css from './details.module.scss';
 
 const Details = (props) => {
   return (

@@ -8,27 +8,36 @@ const ChartElement = (props) => {
   let x = props.x;
   let textOffset = 3;
   let textAlignment = css.right;
+
   if (isLeftSide) {
     x -= WIDTH;
     textOffset = -3;
     textAlignment = css.left;
   }
+
   if (!props.level) {
     textOffset = 0;
     textAlignment = css.middle;
   }
+
   let className = css.container;
+
   if (props.isSelected) {
     className += ' ' + css.selected;
   }
+
   const root = <circle className={className}
     cx={props.x} cy={props.y} r="40" fill="none" stroke="black"/>;
+
   const child = <rect className={className}
     rx="3" ry="3"
     x={x} y={props.y - HEIGHT / 2}
     width={WIDTH} height={HEIGHT} fill="none" stroke="black" />;
+
   const grandChild = <circle cx={props.x} cy={props.y} r="3" className={className} />
+
   let element;
+
   switch(props.level) {
     case 0:
       element = root;
@@ -40,8 +49,6 @@ const ChartElement = (props) => {
       element = grandChild;
       break;
   }
-
-
 
   return (
     <g onClick={() => props.onClick(props.id)}>

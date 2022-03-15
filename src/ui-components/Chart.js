@@ -8,9 +8,11 @@ const Chart = (props) => {
 
   const WIDTH = props.width / props.zoom;
   const HEIGHT = props.height / props.zoom;
+  console.log('WIDTH', WIDTH, 'HEIGHT', HEIGHT);
   const R = 90;
 
   const getChildren = (list, parent, elements, dPhi) => {
+    // console.log('[Chart] getChildren');
     const children = list.filter(item => item.parentId === parent.id);
     for (let i = 0; i < children.length; i++) {
       let item = children[i];
@@ -31,21 +33,37 @@ const Chart = (props) => {
       getChildren(list, element, elements, dPhi / children.length);
     }
   };
+
   const setElements = (list) => {
+    console.log('[chart] setElements', list);
+    // 例 list: [{…}, {…}, {…}, {…}, {…}, {…}]
+    // 0: {name: 'Bright Idea!', level: 0, parentId: null, id: 1, rootId: 1}
+    // 1: {
+          // comment: ""
+          // id: 3
+          // level: 1
+          // name: "New item"
+          // parentId: 2
+          // rootId: 2 }
     const elements = [];
     const x0 = WIDTH / 2;
     const y0 = HEIGHT / 2;
+    console.log('x0', x0, 'y0', y0);
     const root = list.find(item => item.level === 0);
+    // 例 root: {name: 'Bright Idea!', level: 0, parentId: null, id: 1, rootId: 1}
     const rootElement = {
-      id: root.id,
-      name: root.name,
-      level: root.level,
+      id: root.id, // 例 id: 1
+      name: root.name, // 例 name: 'Bright Idia'
+      level: root.level, // 例 level: 0
       x: x0,
       y: y0,
       phi: 0
     };
+    console.log('rootElement: ', rootElement);
     elements.push(rootElement);
-    getChildren(list, rootElement, elements, 2 * Math.PI);
+    console.log('elements: ', elements);
+    // Math.PIは円周率 3.1415...
+    getChildren(list, rootElement, elements, 2*Math.PI);
     return elements;
   };
 
@@ -56,6 +74,7 @@ const Chart = (props) => {
   ];
 
   const elements = setElements(props.list);
+
   return (
     <div className={css.container}>
       <Toolbar list={zoomMenu} type="default" location={['horisontal', 'right', 'top']} />
@@ -64,6 +83,7 @@ const Chart = (props) => {
         onMouseMove={(e) => props.onMouseMove(e)}
         onMouseDown={(e) => props.onMouseDown(e)}
         onMouseUp={(e) => props.onMouseUp(e)}
+        onWheel={(e) => props.onWheel(e)}
       >
         <Connection list={elements} />
         {

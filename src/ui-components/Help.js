@@ -5,11 +5,11 @@ const Help = () => {
     <>
       <h1>Help</h1>
       <p>
-        <a href="https://github.com/101samovar/react-mindmap.git">Source code</a>
+        <a href="https://github.com/sil-co/mindmap-sample3">Source code</a>
 
       </p>
       <p>
-        <a href="https://youtube.com/c/Samovar101">More video</a>
+        <a href="https://github.com/101samovar/react-mindmap.git">References</a>
       </p>
     </>
   );

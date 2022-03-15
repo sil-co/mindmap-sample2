@@ -1,11 +1,13 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import repository from '../repository';
 import router from './router';
 import Details from './Details';
-import css from './map.module.css';
+// import css from './map.module.css';
+import css from './map.module.scss';
 import Toolbar from './Toolbar';
 import TableView from './TableView';
 import Chart from './Chart';
+import MediaQuery from 'react-responsive';
 
 // Hooks記法
 const Map = (props) => {
@@ -27,23 +29,30 @@ const Map = (props) => {
   const [y, setY] = useState(0);
   const [width, setWidth] = useState(DEFAULT_WIDTH);
   const [height, setHeight] = useState(DEFAULT_HEIGHT);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
+  // const [hideItem, setHideItem] = useState(false);
 
   const onResize = () => {
-    console.log('onResize is called');
+    console.log('[Map] onResize is called');
+
     const width = wrapper.current.clientWidth;
     const height = wrapper.current.clientHeight;
     setWidth(width);
     setHeight(height);
+    console.log(`[Map] onResize ${width}, ${height}`);
   };
 
   useEffect(() => {
-    console.log('useEffect onResize Mounting');
+    console.log('[Map] useEffect onResize Mounting');
     onResize();
     window.addEventListener('resize', onResize);
+
     // 戻り値を渡すことで、unMount(ページが移動したりして、死ぬ)時の処理を追加できる
     return () => {
       window.removeEventListener('resize', onResize);
-      console.log('useEffect onResize unMounting');
+      console.log('[Map] useEffect onResize unMounting');
     }
   }, [])
 
@@ -53,6 +62,10 @@ const Map = (props) => {
   };
 
   const ZOOM_FACTOR = 1.1;
+
+  const zoomOnWheel = (e) => {
+    console.log('[Map] zoomOnWheel');
+  }
 
   const zoomIn = () => {
     console.log('[Map] zoomIn');
@@ -70,7 +83,6 @@ const Map = (props) => {
     const item = {id: id, name};
     repository.save(item);
     const list = repository.getList({rootId: rootId});
-
     setName(name);
     setList(list);
   }
@@ -112,9 +124,7 @@ const Map = (props) => {
   const deleteRepository = () => {
     console.log('[Map] deleteRepository');
     repository.delete(id);
-    const list = repository.getList({
-      rootId: rootId
-    });
+    const list = repository.getList({rootId: rootId});
     if (!list.length) {
       router.setRoute('home');
       return;
@@ -132,9 +142,7 @@ const Map = (props) => {
     {name: 'delete', onClick: () => deleteRepository()}
   ];
 
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [startY, setStartY] = useState(0);
+
 
   const onMouseDown = (e) => {
     console.log('[Map] onMouseDown');
@@ -151,7 +159,7 @@ const Map = (props) => {
     setIsDragging(false);
   };
 
-  const onMouseMove = (e) => {
+  const onMouseMove = useCallback((e) => {
     console.log('[Map] onMouseMove');
     if (!isDragging) {
       return;
@@ -161,7 +169,7 @@ const Map = (props) => {
     const y = (startY - e.clientY) * zoom;
     setX(x);
     setY(y);
-  };
+  }, [isDragging, startX, startY, zoom]);
 
   const [view, setView] = useState('');
 
@@ -185,6 +193,7 @@ const Map = (props) => {
         zoom={zoom}
         onZoomIn={zoomIn}
         onZoomOut={zoomOut}
+        onWheel={zoomOnWheel}
         onToggleMoveMode={toggleMoveMode}
         x={x}
         y={y}
@@ -209,13 +218,20 @@ const Map = (props) => {
           list={actionList}
         />
       </div>
-      <Toolbar list={viewMenu} type="default" location={['vertical', 'left', 'bottom']} />
-      <Details id={id}
-        level={level}
-        name={name}
-        onChangeName={changeName}
-        onChangeComment={changeComment}
-        comment={comment} />
+      <Toolbar
+        list={viewMenu}
+        type="default"
+        location={['vertical', 'left', 'bottom']}
+      />
+      <MediaQuery query="(min-width: 501px)">
+        <Details id={id}
+          level={level}
+          name={name}
+          onChangeName={changeName}
+          onChangeComment={changeComment}
+          comment={comment}
+        />
+      </MediaQuery>
     </>
   )
 }

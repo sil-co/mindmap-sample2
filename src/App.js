@@ -1,32 +1,36 @@
 
+import React, {useState, useEffect, useCallback} from 'react';
+import {} from './App.css';
+
 import Header from './ui-components/Header';
 import LeftMenu from './ui-components/LeftMenu';
 import Breadcrumbs from './ui-components/Breadcrumbs';
 import Content from './ui-components/Content';
-import React, {useState, useEffect} from 'react';
 import router from './ui-components/router';
 import routes from './ui-components/routes';
-import {} from './App.css';
+
+import AppContext from './contexts/AppContext';
 
 // hooks記法
 const App = () => {
 
   router.init(routes);
   const route = router.getRoute();
+
   const [component, setComponent] = useState(route.component);
   const [breadcrumbs, setBreadcrumbs] = useState(route.breadcrumbs);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   router.subscribe(onRouteChange);
 
-  const toggleMenu = () => {
+  const toggleMenu = useCallback(() => {
     console.log('[App] toggleMenu');
     setIsMenuVisible(!isMenuVisible);
-  };
+  }, [isMenuVisible]);
 
-  const hideMenu = () => {
+  const hideMenu = useCallback(() => {
     console.log('[App] hideMenu');
     setIsMenuVisible(false);
-  };
+  }, [])
 
   const [_isMounted, setIsMounted] = useState(false);
 
@@ -45,12 +49,14 @@ const App = () => {
   };
 
     return (
-      <div>
-        <Header onMenuClick={toggleMenu} />
-        <LeftMenu isMenuVisible={isMenuVisible} onMouseLeave={hideMenu} />
-        <Breadcrumbs list={breadcrumbs} />
-        <Content component={component} />
-      </div>
+      <AppContext.Provider value={'value from App.js'}>
+        <div>
+          <Header onMenuClick={toggleMenu} />
+          <LeftMenu isMenuVisible={isMenuVisible} onMouseLeave={hideMenu} />
+          <Breadcrumbs list={breadcrumbs} />
+          <Content component={component} />
+        </div>
+      </AppContext.Provider>
     );
 }
 
